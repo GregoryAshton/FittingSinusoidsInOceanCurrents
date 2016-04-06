@@ -28,14 +28,15 @@ params = {'y0': {'prior':
                 'unit': '',
                 },
           'Aprime': {'prior':
-                     {'type': 'norm', 'loc': 0, 'scale': abs(rangey/ranget)},
-                     'symbol': r"$A$",
+                     {'type': 'norm', 'loc': 0, 'scale': 0.01*abs(rangey/ranget)},
+                     'symbol': r"$\dot{A}$",
                      'unit': '',
                      },
           'P': {'prior':
                 {'type': 'unif', 'lower': 0, 'upper': 0.2*(ranget)},
-                'symbol': r"$f$",
-                'unit': '',
+                'symbol': r"$P$",
+                'rescale': ((86400*356.25)**-1, "yrs"),
+                'unit': 's',
                 },
           'psi0': {'prior':
                    {'type': 'unif', 'lower': 0, 'upper': 2*np.pi},

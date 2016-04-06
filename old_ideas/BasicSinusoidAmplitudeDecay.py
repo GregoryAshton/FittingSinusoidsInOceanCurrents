@@ -27,10 +27,14 @@ params = {'y0': {'prior':
                 'symbol': r"$A$",
                 'unit': '',
                 },
+          'Aprime': {'prior':
+                     {'type': 'norm', 'loc': 0, 'scale': abs(rangey/ranget)},
+                     'symbol': r"$A$",
+                     'unit': '',
+                     },
           'P': {'prior':
                 {'type': 'unif', 'lower': 0, 'upper': 0.2*(ranget)},
-                'symbol': r"$P$",
-                'rescale': ((86400*356.25)**-1, "yrs"),
+                'symbol': r"$f$",
                 'unit': '',
                 },
           'psi0': {'prior':
@@ -44,8 +48,8 @@ params = {'y0': {'prior':
                     'unit': '$\mathrm{s}^{-2}$'
                     }}
 
-param_keys = ['y0', 'yprime0', 'A', 'P', 'psi0', 'sigma']
-model_name = "BasicSinusoid"
+param_keys = ['y0', 'yprime0', 'A', 'Aprime', 'P', 'psi0', 'sigma']
+model_name = "BasicSinusoidAmplitudeDecay"
 cargs = BDA.SetupHelper(model_name)
 
 ntemps = 10
@@ -57,8 +61,8 @@ scatter_val = 1e-3
 nwalkers = 100
 
 
-def SignalModel(time, y0, yprime0, A, P, phi0, sigma):
-    return y0 + yprime0*time + A*np.sin(2*np.pi*time/P + phi0)
+def SignalModel(time, y0, yprime0, A, Aprime, P, phi0, sigma):
+    return y0 + yprime0*time + (A + Aprime*time)*np.sin(2*np.pi*time/P + phi0)
 
 DD = BDA.GetData(
     time, y, SignalModel, model_name=model_name, params=params,

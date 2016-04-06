@@ -34,31 +34,52 @@ params = {'y0': {'prior':
                 'unit': '',
                 },
           'psi0': {'prior':
-                   {'type': 'unif', 'lower': 0, 'upper': 2*np.pi},
+                   {'type': 'unif', 'lower': -np.pi, 'upper': np.pi},
                    'symbol': r"$\psi_0$",
                    'unit': 'rad'
                    },
+          'dy0': {'prior':
+                  {'type': 'norm', 'loc': 0, 'scale': 10*rangey},
+                  'symbol': r"$\delta y_{0}$",
+                  'unit': ''
+                  },
+          'dt': {'prior':
+                 {'type': 'halfnorm', 'loc': 0, 'scale': 0.5*ranget},
+                 'symbol': r"$\Delta t$",
+                 'rescale': ((86400)**-1, "days"),
+                 'unit': 's'
+                 },
+          'T': {'prior':
+                {'type': 'unif', 'lower': 0, 'upper': ranget},
+                'symbol': r"$T$",
+                'unit': '',
+                'rescale': ((86400)**-1, "days"),
+                },
+
           'sigma': {'prior':
                     {'type': 'unif', 'lower': 0, 'upper': rangey},
                     'symbol': r"$\sigma_{\dot{\nu}}$",
                     'unit': '$\mathrm{s}^{-2}$'
                     }}
 
-param_keys = ['y0', 'yprime0', 'A', 'P', 'psi0', 'sigma']
-model_name = "BasicSinusoid"
+param_keys = ['y0', 'yprime0', 'A', 'P', 'psi0', 'dy0', 'dt', 'T', 'sigma']
+model_name = "BasicSinusoidFlatTransient"
 cargs = BDA.SetupHelper(model_name)
 
 ntemps = 10
-nburn0 = 1000
-nburn = 1000
-nprod = 1000
+nburn0 = 500
+nburn = 500
+nprod = 500
 
 scatter_val = 1e-3
 nwalkers = 100
 
 
-def SignalModel(time, y0, yprime0, A, P, phi0, sigma):
-    return y0 + yprime0*time + A*np.sin(2*np.pi*time/P + phi0)
+def SignalModel(time, y0, yprime0, A, P, phi0, dy0, dt, T, sigma):
+    base = y0 + yprime0*time + A*np.sin(2*np.pi*time/P + phi0)
+    trans = np.zeros(len(time))
+    trans[(T < time) & (time < T+dt)] = dy0
+    return base + trans
 
 DD = BDA.GetData(
     time, y, SignalModel, model_name=model_name, params=params,

@@ -33,32 +33,49 @@ params = {'y0': {'prior':
                 'rescale': ((86400*356.25)**-1, "yrs"),
                 'unit': '',
                 },
-          'psi0': {'prior':
-                   {'type': 'unif', 'lower': 0, 'upper': 2*np.pi},
-                   'symbol': r"$\psi_0$",
-                   'unit': 'rad'
-                   },
+          'psi01': {'prior':
+                    {'type': 'unif', 'lower': 0, 'upper': 4*np.pi},
+                    'symbol': r"$\psi_0^1$",
+                    'unit': 'rad'
+                    },
+          'psi02': {'prior':
+                    {'type': 'unif', 'lower': 0, 'upper': 4*np.pi},
+                    'symbol': r"$\psi_0^2$",
+                    'unit': 'rad'
+                    },
+          'T': {'prior':
+                {'type': 'unif', 'lower': 0, 'upper': np.max(time)},
+                'symbol': r"$T$",
+                'unit': 'rad',
+                'rescale': ((86400*356.25)**-1, "yrs"),
+                },
           'sigma': {'prior':
                     {'type': 'unif', 'lower': 0, 'upper': rangey},
                     'symbol': r"$\sigma_{\dot{\nu}}$",
                     'unit': '$\mathrm{s}^{-2}$'
                     }}
 
-param_keys = ['y0', 'yprime0', 'A', 'P', 'psi0', 'sigma']
-model_name = "BasicSinusoid"
+param_keys = ['y0', 'yprime0', 'A', 'P', 'psi01', 'psi02', 'T', 'sigma']
+model_name = "BasicSinusoidResetphi0"
 cargs = BDA.SetupHelper(model_name)
 
-ntemps = 10
-nburn0 = 1000
-nburn = 1000
-nprod = 1000
+ntemps = 1
+nburn0 = 500
+nburn = 500
+nprod = 500
 
 scatter_val = 1e-3
 nwalkers = 100
 
 
-def SignalModel(time, y0, yprime0, A, P, phi0, sigma):
-    return y0 + yprime0*time + A*np.sin(2*np.pi*time/P + phi0)
+def SignalModel(time, y0, yprime0, A, P, psi01, psi02, T, sigma):
+    base = y0 + yprime0 * time
+    T1 = A*np.sin(2*np.pi*time/P + psi01)
+    T2 = A*np.sin(2*np.pi*time/P + psi02)
+    TF = np.zeros(len(time))
+    TF[time < T] = T1[time < T]
+    TF[time >= T] = T2[time >= T]
+    return base + TF
 
 DD = BDA.GetData(
     time, y, SignalModel, model_name=model_name, params=params,
