@@ -12,79 +12,56 @@ miny = np.min(y)
 maxy = np.max(y)
 rangey = maxy-miny
 ranget = np.max(time)-np.min(time)
-params = {'y0': {'prior':
-                 {'type': 'unif', 'lower': miny, 'upper': maxy},
-                 'symbol': r"$y_0$",
-                 'unit': 's',
-                 },
-          'yprime0': {'prior':
-                      {'type': 'norm', 'loc': 0, 'scale': abs(rangey/ranget)},
-                      'symbol': r"$y_0$",
-                      'unit': 's',
-                      },
-          'A0': {'prior':
+params = {'A1': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': rangey},
-                 'symbol': r"$A_0$",
-                 'unit': '',
-                 },
-          'A1': {'prior':
-                 {'type': 'unif', 'lower': 0, 'upper': rangey},
-                 'symbol': r"$A_1$",
-                 'unit': '',
+                 'symbol': r"$A_1$"+"\n",
+                 'unit': 'Sv',
                  },
           'T1': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': np.max(time)},
-                 'symbol': r"$T_1$",
+                 'symbol': r"$T_1$"+"\n",
                  'unit': 'rad',
                  'rescale': ((86400)**-1, "days"),
                  },
           'A2': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': rangey},
-                 'symbol': r"$A_2$",
-                 'unit': '',
+                 'symbol': r"$A_2$"+"\n",
+                 'unit': 'Sv',
                  },
           'T2': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': np.max(time)},
-                 'symbol': r"$T_2$",
+                 'symbol': r"$T_2$"+"\n",
                  'unit': 'rad',
                  'rescale': ((86400)**-1, "days"),
                  },
           'A3': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': rangey},
-                 'symbol': r"$A_3$",
-                 'unit': '',
+                 'symbol': r"$A_3$"+"\n",
+                 'unit': 'Sv',
                  },
           'T3': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': np.max(time)},
-                 'symbol': r"$T_3$",
-                 'unit': 'rad',
+                 'symbol': r"$T_3$"+"\n",
+                 'unit': 's',
                  'rescale': ((86400)**-1, "days"),
                  },
-          'P': {'prior':
-                {'type': 'unif', 'lower': 0, 'upper': 0.2*(ranget)},
-                'symbol': r"$P$",
-                'rescale': ((86400*356.25)**-1, "yrs"),
-                'unit': '',
-                },
-          'psi0': {'prior':
-                   {'type': 'unif', 'lower': 0, 'upper': 4*np.pi},
-                   'symbol': r"$\psi_0$",
-                   'unit': 'rad'
-                   },
-          'sigma': {'prior':
-                    {'type': 'unif', 'lower': 0, 'upper': rangey},
-                    'symbol': r"$\sigma_{\dot{\nu}}$",
-                    'unit': '$\mathrm{s}^{-2}$'
-                    }}
+          }
+
+parent_model_name = "BasicSinusoid"
+parent_keys = ['y0', 'yprime0', 'A0', 'P', 'psi0', 'sigma']
+ParentParams = BDA.ReadPickle(parent_model_name,
+                              dtype="DataDictionary")['params']
+for param in parent_keys:
+    params[param] = ParentParams[param]
 
 param_keys = ['y0', 'yprime0', 'A0', 'A1', 'T1', 'A2', 'T2', 'A3', 'T3', 
               'P', 'psi0', 'sigma']
 model_name = "BasicSinusoidResetA3"
 cargs = BDA.SetupHelper(model_name)
 
-ntemps = 10
-nburn0 = 3000
-nburn = 3000
+ntemps = 30
+nburn0 = 5000
+nburn = 5000
 nprod = 1000
 thin = [1, 10, 1]
 scatter_val = 1e-3
@@ -124,6 +101,7 @@ BDA.PlotWithData(time, y, samples, SignalModel,
                  save=True, tick_size=8, nsamples="MLE",
                  lnprobs=lnprobs, markersize=0.5)
 BDA.PlotWithDataAndCorner(time, y, model_name, DD, SignalModel, cargs,
-                          markersize=0.5)
+                          markersize=0.5, label_offset=0.6,  xlabel="days",
+                          title=": $y(t)=y_0+A(t)\sin(2\pi t /P + \psi_0)$")
 
 BDA.WriteEvidenceToFile(model_name, DD)

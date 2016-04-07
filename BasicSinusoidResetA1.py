@@ -12,22 +12,7 @@ miny = np.min(y)
 maxy = np.max(y)
 rangey = maxy-miny
 ranget = np.max(time)-np.min(time)
-params = {'y0': {'prior':
-                 {'type': 'unif', 'lower': miny, 'upper': maxy},
-                 'symbol': r"$y_0$",
-                 'unit': 's',
-                 },
-          'yprime0': {'prior':
-                      {'type': 'norm', 'loc': 0, 'scale': abs(rangey/ranget)},
-                      'symbol': r"$y_0$",
-                      'unit': 's',
-                      },
-          'A0': {'prior':
-                 {'type': 'unif', 'lower': 0, 'upper': rangey},
-                 'symbol': r"$A_0$",
-                 'unit': '',
-                 },
-          'A1': {'prior':
+params = {'A1': {'prior':
                  {'type': 'unif', 'lower': 0, 'upper': rangey},
                  'symbol': r"$A_1$",
                  'unit': '',
@@ -38,22 +23,14 @@ params = {'y0': {'prior':
                  'unit': 'rad',
                  'rescale': ((86400)**-1, "days"),
                  },
-          'P': {'prior':
-                {'type': 'unif', 'lower': 0, 'upper': 0.2*(ranget)},
-                'symbol': r"$P$",
-                'rescale': ((86400*356.25)**-1, "yrs"),
-                'unit': '',
-                },
-          'psi0': {'prior':
-                   {'type': 'unif', 'lower': 0, 'upper': 4*np.pi},
-                   'symbol': r"$\psi_0$",
-                   'unit': 'rad'
-                   },
-          'sigma': {'prior':
-                    {'type': 'unif', 'lower': 0, 'upper': rangey},
-                    'symbol': r"$\sigma_{\dot{\nu}}$",
-                    'unit': '$\mathrm{s}^{-2}$'
-                    }}
+          }
+
+parent_model_name = "BasicSinusoid"
+parent_keys = ['y0', 'yprime0', 'A0', 'P', 'psi0', 'sigma']
+ParentParams = BDA.ReadPickle(parent_model_name,
+                              dtype="DataDictionary")['params']
+for param in parent_keys:
+    params[param] = ParentParams[param]
 
 param_keys = ['y0', 'yprime0', 'A0', 'A1', 'T1', 'P', 'psi0', 'sigma']
 model_name = "BasicSinusoidResetA1"

@@ -15,23 +15,23 @@ ranget = np.max(time)-np.min(time)
 params = {'y0': {'prior':
                  {'type': 'unif', 'lower': miny, 'upper': maxy},
                  'symbol': r"$y_0$",
-                 'unit': 's',
+                 'unit': 'Sv',
                  },
           'yprime0': {'prior':
                       {'type': 'norm', 'loc': 0, 'scale': abs(rangey/ranget)},
                       'symbol': r"$y_0$",
-                      'unit': 's',
+                      'unit': 'Sv/s',
                       },
-          'A': {'prior':
-                {'type': 'unif', 'lower': 0, 'upper': rangey},
-                'symbol': r"$A$",
-                'unit': '',
-                },
+          'A0': {'prior':
+                 {'type': 'unif', 'lower': 0, 'upper': rangey},
+                 'symbol': r"$A_0$",
+                 'unit': 'Sv',
+                 },
           'P': {'prior':
                 {'type': 'unif', 'lower': 0, 'upper': 0.2*(ranget)},
                 'symbol': r"$P$",
                 'rescale': ((86400*356.25)**-1, "yrs"),
-                'unit': '',
+                'unit': 's',
                 },
           'psi0': {'prior':
                    {'type': 'unif', 'lower': 0, 'upper': 2*np.pi},
@@ -40,11 +40,11 @@ params = {'y0': {'prior':
                    },
           'sigma': {'prior':
                     {'type': 'unif', 'lower': 0, 'upper': rangey},
-                    'symbol': r"$\sigma_{\dot{\nu}}$",
-                    'unit': '$\mathrm{s}^{-2}$'
+                    'symbol': r"$\sigma$",
+                    'unit': 'Sv'
                     }}
 
-param_keys = ['y0', 'yprime0', 'A', 'P', 'psi0', 'sigma']
+param_keys = ['y0', 'yprime0', 'A0', 'P', 'psi0', 'sigma']
 model_name = "BasicSinusoid"
 cargs = BDA.SetupHelper(model_name)
 
@@ -57,8 +57,8 @@ scatter_val = 1e-3
 nwalkers = 100
 
 
-def SignalModel(time, y0, yprime0, A, P, phi0, sigma):
-    return y0 + yprime0*time + A*np.sin(2*np.pi*time/P + phi0)
+def SignalModel(time, y0, yprime0, A0, P, phi0, sigma):
+    return y0 + yprime0*time + A0*np.sin(2*np.pi*time/P + phi0)
 
 DD = BDA.GetData(
     time, y, SignalModel, model_name=model_name, params=params,
@@ -77,6 +77,7 @@ BDA.PlotWithData(time, y, samples, SignalModel,
                  save=True, tick_size=8, nsamples="MLE",
                  lnprobs=lnprobs, markersize=0.5)
 BDA.PlotWithDataAndCorner(time, y, model_name, DD, SignalModel, cargs,
-                          markersize=0.5)
+                          markersize=0.5,  xlabel="days",
+                          title=": $y(t)=y_0+A_0\sin(2\pi t /P + \psi_0)$")
 
 BDA.WriteEvidenceToFile(model_name, DD)
