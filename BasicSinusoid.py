@@ -83,3 +83,6 @@ BDA.PlotWithDataAndCorner(time, y, model_name, DD, SignalModel, cargs,
                           )
 
 BDA.WriteEvidenceToFile(model_name, DD)
+
+BDA.GenericDistributionTable(params, param_keys, model_name,
+                             distribution="prior")

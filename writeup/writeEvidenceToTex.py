@@ -42,4 +42,4 @@ for ma in ['BasicSinusoidAmplitudeDecay', 'BasicSinusoidAmplitudeDecayWithTransi
     mb = 'BasicSinusoid'
     write_macro(ma, mb, data)
 
-write_macro("BasicSinusoidAmplitudeDecay", "BasicSinusoidAmplitudeDecayWithTransient", data)
+write_macro("BasicSinusoidAmplitudeDecayWithTransient", "BasicSinusoidAmplitudeDecay", data)
