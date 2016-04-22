@@ -19,6 +19,23 @@ params = {'Aprime': {'prior':
                      'symbol': r"$\dot{A}$",
                      'unit': 'Sv/s',
                      },
+          'yt1': {'prior':
+                  {'type': 'unif', 'lower': 0, 'upper': rangey},
+                  'symbol': r"$A_1^t$"+"\n",
+                  'unit': 'Sv',
+                  },
+          't1start': {'prior':
+                      {'type': 'unif', 'lower': 0, 'upper': np.max(time)},
+                      'symbol': r"$t_1^\mathrm{start}$"+"\n",
+                      'unit': 'rad',
+                      'rescale': ((86400)**-1, "days"),
+                      },
+          't1end': {'prior':
+                    {'type': 'unif', 'lower': 0, 'upper': np.max(time)},
+                    'symbol': r"$t_1^\mathrm{end}$"+"\n",
+                    'unit': 'rad',
+                    'rescale': ((86400)**-1, "days"),
+                    },
           }
 
 parent_model_name = "BasicSinusoid"
@@ -28,8 +45,9 @@ ParentParams = BDA.ReadPickle(parent_model_name,
 for param in parent_keys:
     params[param] = ParentParams[param]
 
-param_keys = ['y0', 'yprime0', 'A0', 'Aprime', 'P', 'psi0', 'sigma']
-model_name = "BasicSinusoidAmplitudeDecay"
+param_keys = ['y0', 'yprime0', 'A0', 'Aprime', 'yt1', 't1start', 't1end', 'P',
+              'psi0', 'sigma']
+model_name = "BasicSinusoidAmplitudeDecayWithTransient"
 cargs = BDA.SetupHelper(model_name)
 
 ntemps = 10
@@ -41,8 +59,13 @@ scatter_val = 1e-3
 nwalkers = 100
 
 
-def SignalModel(time, y0, yprime0, A0, Aprime, P, phi0, sigma):
-    return y0 + yprime0*time + (A0 + Aprime*time)*np.sin(2*np.pi*time/P + phi0)
+def SignalModel(time, y0, yprime0, A0, Aprime, yt1, t1start, t1end, P,
+                phi0, sigma):
+    if t1start > t1end:
+        return np.zeros(len(time))
+    y = np.zeros(len(time)) + y0
+    y[(time > t1start) & (time < t1end)] = yt1
+    return y + yprime0*time + (A0 + Aprime*time)*np.sin(2*np.pi*time/P + phi0)
 
 DD = BDA.GetData(
     time, y, SignalModel, model_name=model_name, params=params,
@@ -61,9 +84,8 @@ BDA.PlotWithData(time, y, samples, SignalModel,
                  save=True, tick_size=8, nsamples="MLE",
                  lnprobs=lnprobs, markersize=0.5)
 BDA.PlotWithDataAndCorner(time, y, model_name, DD, SignalModel, cargs,
-                          markersize=0.5,  xlabel="days",
+                          markersize=0.5,  xlabel="days", label_offset=0.6,
                           ylabel="AMOC flow [Sv]",
-                          #title=": $y(t)=y_0+(A_0 + \dot{A}t)\sin(2\pi t /P + \psi_0)$"
                           )
 
 BDA.WriteEvidenceToFile(model_name, DD)

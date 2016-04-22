@@ -78,6 +78,8 @@ BDA.PlotWithData(time, y, samples, SignalModel,
                  lnprobs=lnprobs, markersize=0.5)
 BDA.PlotWithDataAndCorner(time, y, model_name, DD, SignalModel, cargs,
                           markersize=0.5,  xlabel="days",
-                          title=": $y(t)=y_0+A_0\sin(2\pi t /P + \psi_0)$")
+                          ylabel="AMOC flow [Sv]",
+                          #title=": $y(t)=y_0+A_0\sin(2\pi t /P + \psi_0)$"
+                          )
 
 BDA.WriteEvidenceToFile(model_name, DD)
