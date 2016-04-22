@@ -21,7 +21,7 @@ params = {'Aprime': {'prior':
                      },
           'yt1': {'prior':
                   {'type': 'unif', 'lower': 0, 'upper': rangey},
-                  'symbol': r"$A_1^t$"+"\n",
+                  'symbol': r"$y_1$"+"\n",
                   'unit': 'Sv',
                   },
           't1start': {'prior':
