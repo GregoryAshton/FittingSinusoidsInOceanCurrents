@@ -1,0 +1,5 @@
+1) Add residuals plot after removing the Sinusoid - possibly even all three?
+2) Add automatic calculation of the Doomsday prediction
+3) Add in tables to the git repo and remove comments
+
+
