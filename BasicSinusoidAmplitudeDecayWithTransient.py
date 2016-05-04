@@ -92,3 +92,5 @@ BDA.WriteEvidenceToFile(model_name, DD)
 
 BDA.GenericDistributionTable(params, param_keys, model_name,
                              distribution="prior")
+
+BDA.PlotResidualDistribution(time, y, samples, SignalModel, lnprobs, model_name)

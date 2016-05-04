@@ -9,7 +9,7 @@
 % Figures
 \usepackage{graphicx}
 
-\usepackage[letterpaper, margin=0.5in]{geometry}
+\usepackage[letterpaper, margin=1in]{geometry}
 
 \usepackage{hhline}
 
@@ -25,8 +25,8 @@
 \date{}
 \maketitle
 
-In this document we show some preliminary results of fitting phenomological models
-to the AMOC data. To select between these phenomological models we will use the
+In this document we show some preliminary results of fitting phenomenological models
+to the AMOC data. To select between these phenomenological models we will use the
 Bayes factor, defined as
 \begin{align}
 \mathcal{B}(\textrm{model A}, \textrm{model B}) = \frac{P(\textrm{model A}| \textrm{ data})}{P(\textrm{model B}| \textrm{ data})}
@@ -35,7 +35,7 @@ Bayes factor, defined as
 such that $\mathcal{B} > 1$ provides evidence for model A over model B, while
 $\mathcal{B} < 1$ provides evidence for model B over model A. 
 
-We assume the data is a linear sum of the phenomological model and
+We assume the data is a linear sum of the phenomenological model and
 gaussian noise to generate a likelihood function for the data. The Bayes factor
 is sensitive to both how well the model fits the data, and also the priors chosen
 for each model parameter. These priors have been chosen crudely from the data,
@@ -49,7 +49,7 @@ so-called `thermodynamic integration', this is a numerical method which has an
 associated numerical error which we estimate.
 
 The data that we will consider will be the AMOC flow as a function of the number
-of days since the begining of the data set, 2$^{nd}$ April 2004. In the models a
+of days since the beginning of the data set, 2$^{nd}$ April 2004. In the models a
 reference time $\tref$ will be used, we set this to the start of the data set
 \begin{align}
 \tref = \textrm{2}^{nd}\textrm{ April 2004} = 53097 \textrm{ MJD},
@@ -70,18 +70,18 @@ y(t) = y_0 + \dot{y}_0(t - \tref) + A_0 \sin\left(2\pi \frac{t}{P} + \psi_0\righ
 This includes all the basic features which are visible by eye in the data.
 
 As we are using a Bayesian methodology, we need to define priors for each of
-the model paramters in Eqn.~\eqref{eqn: base-model} and for $\sigma$, the
+the model parameters in Eqn.~\eqref{eqn: base-model} and for $\sigma$, the
 gaussian noise in the measurements. These are listed in Table~\ref{tab: base-model}
 and were chosen from crude estimates to the data. Note that this choice, for the
 base-model parameters, will not produce any bias when compared to modifications
 since the priors will cancel out. However, modification model parameters could
 produce a bias.
-%\begin{table}[htb]
-%\centering
-%\caption{Prior distributions used in the base-model}
-%\label{tab: base-model}
-%\input{Table_BasicSinusoid_prior.tex}
-%\end{table}
+\begin{table}[htb]
+\centering
+\caption{Prior distributions used in the base-model}
+\label{tab: base-model}
+\input{Table_BasicSinusoid_prior.tex}
+\end{table}
 
 In Fig.~\ref{fig: base-model}A we show the posterior distributions of the
 base-model model parameters. This demonstrates that the MCMC simulation has
@@ -114,13 +114,13 @@ For the priors in this model, we use the same as those in the base-model then
 for $\dot{A}$ we use a normal prior with zero mean, giving equal weight to $A$
 growing or shrinking, and a standard-deviation of
 $0.01\frac{\textrm{range}(y)}{\textrm{range(time)}}$. This is an ad-hoc prior
-which will have an effect on the Bayes factor in marginal cases. In Table~\ref{tab: base-model} we list the full set of priors for this model.
-%\begin{table}[htb]
-%\centering
-%\caption{Prior distributions used in the evolving amplitude model}
-%\label{tab: base-model}
-%\input{Table_BasicSinusoidAmplitudeDecay_prior.tex}
-%\end{table}
+which will have an effect on the Bayes factor in marginal cases. In Table~\ref{tab: decay amplitude} we list the full set of priors for this model.
+\begin{table}[htb]
+\centering
+\caption{Prior distributions used in the evolving amplitude model}
+\label{tab: decay amplitude}
+\input{Table_BasicSinusoidAmplitudeDecay_prior.tex}
+\end{table}
 
 In Fig.~\ref{fig: decay amplitude}A we plot the posterior distribution for the
 model parameters and in Fig.~\ref{fig: decay amplitude}B we plot the MPE fit to
@@ -138,7 +138,7 @@ decaying suggesting that the $\dot{A}$ modification is important. This is
 confirmed by looking at its posterior value, we see it is gaussian with a mean
 of $\sim-4.5\times10^{-9}$~Sv/s: the amplitude is decaying. Moreover, the
 posterior excludes $\dot{A}>0$ indicating that the data is decisive and we have
-no uncertainty that the ampitude is decaying. We will comment further on the
+no uncertainty that the amplitude is decaying. We will comment further on the
 potential implications of this in Sec.~\ref{sec: predictions}.
 
 \section{Sinusoidal model with evolving amplitude and transient offset}
@@ -146,7 +146,7 @@ potential implications of this in Sec.~\ref{sec: predictions}.
 The two models considered so far both suffer from poor fitting during the epoch
 of 2100~day after the observations start. The data quite clearly does something
 unusual at this point, which is around September 2009. Without any physical
-input as to what causes this, we can still model it in a simple phenomological
+input as to what causes this, we can still model it in a simple phenomenological
 way. In particular, let us allow the time-averaged AMOC flow ignoring the
 secular drift, $y_0$ in the previous models, to undergo a transient period.
 That is we let
@@ -168,15 +168,15 @@ This transient modification introduces three new parameters, the start and end
 time of the transient period and the value $y_1^{\textrm{t}}$. For the two times,
 we apply a uniform prior limiting them to be within the observation time and
 we also add a caveat that $t_1^{\textrm{start}} < t_1^{\textrm{end}}$ to break
-the degenerat solutions. For $y_1^\textrm{t}$ we apply the same prior given to
+the degenerate solutions. For $y_1^\textrm{t}$ we apply the same prior given to
 $y_0$ based on a crude estimate to the data. These priors are listed, along with
 those for the base-model parameters, in Table~\ref{tab: decay amplitude transient}.
-%\begin{table}[htb]
-%\centering
-%\caption{Prior distributions used in the evolving amplitude model with a transient offset}
-%\label{tab: decay amplitude transient}
-%\input{Table_BasicSinusoidAmplitudeDecayWithTransient_prior.tex}
-%\end{table}
+\begin{table}[htb]
+\centering
+\caption{Prior distributions used in the evolving amplitude model with a transient offset}
+\label{tab: decay amplitude transient}
+\input{Table_BasicSinusoidAmplitudeDecayWithTransient_prior.tex}
+\end{table}
 
 In Fig.~\ref{fig: decay amplitude transient}A we show the posterior values and
 in Fig.~\ref{fig: decay amplitude transient}B we show the MPE fit for the evolving
@@ -198,11 +198,11 @@ the last section.
 
 \section{Bayes factor comparisons}
 In this section we will compare between the three models. This can easily be
-done quantitatevly by calculating the Bayes factor defined in Eqn,~\eqref{eqn: Bayes}.
-In Table~\ref{tab: bayes factors} we present the Bayes factor being the probablity
+done quantitatively by calculating the Bayes factor defined in Eqn,~\eqref{eqn: Bayes}.
+In Table~\ref{tab: bayes factors} we present the Bayes factor being the probability
 of model~A over model~B; a Bayes factor greater than 1 indicates a preference for
 model~A over model~B.
-\begin{table}
+\begin{table}[htb]
 \centering
 \caption{Bayes factors between the models compared in this work}
 \label{tab: bayes factors}
@@ -234,8 +234,8 @@ transient region.
 \section{Predicting the amplitude decay}
 \label{sec: predictions}
 
-The decay of the ampitude, if it persists into the future, means that eventually
-the osciallations of the AMOC flow may become smaller than our resolution to
+The decay of the amplitude, if it persists into the future, means that eventually
+the oscillations of the AMOC flow may become smaller than our resolution to
 measure it. When this happens can be estimated from the posteriors, taking
 typical values we see that
 \begin{align}
@@ -249,7 +249,7 @@ variations are equal to the threshold
 \Rightarrow \hspace{5mm}  & t^{*}   = \tref + \frac{\sigma_A - A_0}{\dot{A}}
 \end{align}
 Taking $\sigma_A = 0.1$ this predicts that the condition is met approximately
-7500 days after $\tref$, which is MJD~60597, or $14^{th}$ of October 2024.
+7500 days after $\tref$, which is MJD~60555, or the $9^{th}$ of September 2024.
 
 
 
