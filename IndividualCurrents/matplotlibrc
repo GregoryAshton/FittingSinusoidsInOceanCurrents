@@ -1,0 +1,23 @@
+backend         : Agg
+pdf.compression  : 9
+savefig.format  : png
+savefig.dpi     : 300
+axes.labelsize  : 10.0  # fontsize of the x any y labels
+xtick.labelsize : 8.0  # fontsize of the tick labels
+ytick.labelsize : 8.0  # fontsize of the tick labels
+legend.fontsize : 10.0
+font.family     : serif
+font.serif      : Computer Modern
+text.usetex     : True  # use latex for all text handling
+#axes.formatter.use_mathtext : True
+axes.formatter.useoffset : False
+axes.formatter.limits : -3, 3
+figure.figsize  : 4.2, 2.1
+figure.facecolor : w
+axes.color_cycle : k, b, r
+xtick.major.size : 3.0
+xtick.minor.size : 1.5
+ytick.major.size : 3.0
+ytick.minor.size : 1.5
+ytick.minor.visible : True
+xtick.minor.visible : True
